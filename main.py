@@ -1,32 +1,38 @@
-import numpy as np #imports algebra 
-import matplotlib 
+import numpy as np #imports umpy
 import matplotlib.pyplot as plt #imports graphs
 import pandas as pd #imports data processing 
-#from sklearn.cluster import KMeans
+import csv
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
 
-#open files & extract the data 
-file1 = open("C:\Users\i_gil\OneDrive - Canterbury Christ Church University\Documents\Year 2\S2 - Artifical Intelligence Computing\Assignment 2\code\DataSets\adult.data", "r")
+#opens the data, sets it as a table using the 3rd column as the index as this is the unique piece of data
 
-for line in file1:
-    datalines = file1.readline()
-    list1 = datalines.split(',')
-    list1.append([float(list1[0].strip()),float(list1[1].strip())]) #
-file1.close()
+datafile = pd.read_csv('adult.csv', index_col = [2])
 
-file2 = open("C:\Users\i_gil\OneDrive - Canterbury Christ Church University\Documents\Year 2\S2 - Artifical Intelligence Computing\Assignment 2\code\DataSets\adult.testt", "r")
+# drops any null data from the data set
+datafile.dropna(inplace = True)
 
-for line in file2:
-    datalines2 =  file2.readline()
-    list2 = datalines2.split (',')
-    list2.append([float(list2[0].strip()),float(list2[1].strip())]) #
-file2.close()
+#print(datafile)
 
-#add both extracted data lists together
-allData = list1 + list2
-print(allData)
+#function to find optimum number of clusters, k
 
-
-#set number of clusters
-#k =
-
-
+def findKnumber(data, max_k):
+    means = []
+    interias = []
+    
+    for k in range (1, max_k):
+        kmeans = KMeans(n_clsuters=k)
+        kmeans.fit(data)
+        
+        means.append(k)
+        inertias.append(kmeans.inertia_)
+        
+    fig =plt.subplots(figsize=(10,5))
+    plt.plot(means, inertias, 'o-')
+    plt.xlabel('Number of clusters')
+    plt.ylabel('inertia')
+    plt.grid(True)
+    plt.show()
+    
+#call function to find k
+findKnumber(datafile[['age', 'educationNum' ]], 10)
