@@ -14,10 +14,10 @@ datafile.dropna(inplace = True)
 #transform data using standard scaler to plot easier
 scaler = StandardScaler()
 datafile.columns = datafile.columns.to_series().apply(lambda x: x.strip())
-datafile[["age_t", "educationNum_t", "capitolGain_t", "capitolLoss_t", "hours_t"]] = scaler.fit_transform(datafile[["age", "educationNum", "capitolGain", "capitolLoss", "hours"]])
+datafile[["age_t", "educationNum_t"]] = scaler.fit_transform(datafile[["age", "educationNum"]])
 #print(datafile)
 
-#function to find optimum number of clusters, k
+#function to find optimum number of clusters, produces an elbow graph
 def findKnumber(data, max_k):
     means = []
     inertias = []
@@ -37,8 +37,31 @@ def findKnumber(data, max_k):
     plt.show()
     
 #call function to find k
-findKnumber(datafile[["age_t", "educationNum_t", "capitolGain_t", "capitolLoss_t", "hours_t"]], 10)
+findKnumber(datafile[["age_t", "educationNum_t"]], 10)
 
 #applying Kmeans algorithm
-#elbow graph suggest 5 or 6 clusters 
-kmeans = KMeans 
+#elbow graph suggests 5 clusters  
+kmeans = KMeans(n_clusters=5)
+kmeans.fit(datafile[["age_t", "educationNum_t"]])
+datafile['kmeans_5'] = kmeans.labels_
+#print(datafile)
+
+#plot the results using age and eductaion num as the axis. 
+#plt.scatter(x=datafile['age'], y=datafile['educationNum'], c=datafile['kmeans_5'])
+#plt.xlim(15, 100)
+#plt.ylim(0, 20)
+#plt.show()
+
+#plot results with varrying clusters
+for k in range( 1, 6):
+    kmeans=KMeans(n_clusters=k)
+    kmeans.fit(datafile[["age_t", "educationNum_t"]])
+    datafile[f'KMeans_{k}'] = kmeans.labels_
+    print(datafile)
+    
+    fig, axs = plt.subplots(nrows =1, ncols =5, figsize =(20,5))
+    for i, ax in enumerate(fig.axes, start=1):
+        ax.scatter(x=datafile['age'], y=datafile['educationNum'], c=datafile[f'KMeans_{i}'])
+        ax.set_xlim(15, 100)
+        ax.set_ylim(0, 20)
+        ax.set_title(f'N Clusters: {i}') 
