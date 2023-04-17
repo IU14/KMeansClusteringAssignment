@@ -53,14 +53,13 @@ datafile['kmeans_5'] = kmeans.labels_
 #plt.show()
 
 #plot results with varrying clusters
-for k in range( 1, 6):
+for k in range(1, 6):
     kmeans=KMeans(n_clusters=k)
     kmeans.fit(datafile[["age_t", "educationNum_t"]])
     datafile[f'KMeans_{k}'] = kmeans.labels_
-    print(datafile)
-    
+    #print(datafile)
     fig, axs = plt.subplots(nrows =1, ncols =5, figsize =(20,5))
-    for i, ax in enumerate(fig.axes, start=1):
+    for i, ax in enumerate(fig.axes):
         ax.scatter(x=datafile['age'], y=datafile['educationNum'], c=datafile[f'KMeans_{i}'])
         ax.set_xlim(15, 100)
         ax.set_ylim(0, 20)
