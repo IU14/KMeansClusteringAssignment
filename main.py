@@ -1,9 +1,9 @@
-import numpy as np #imports umpy
+import numpy as np #imports numpy
 import matplotlib.pyplot as plt #imports graphs
 import pandas as pd #imports data processing 
-import csv
-from sklearn.preprocessing import StandardScaler
-from sklearn.cluster import KMeans
+import csv #can read a csv file
+from sklearn.preprocessing import StandardScaler #imports scaler from Sklearn
+from sklearn.cluster import KMeans #imports KMeans from Sklearn library
 
 #opens the data, sets it as a table using the 3rd column as the index as this is the unique piece of data
 datafile = pd.read_csv('adult.csv', index_col = [2])
